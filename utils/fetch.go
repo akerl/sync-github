@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/google/go-github/v45/github"
 )
@@ -15,8 +16,9 @@ func HandleRepos(config Config, repos []*github.Repository) error {
 	for _, repo := range repos {
 		fmt.Println(*repo.FullName)
 		repoPath := path.Join(config.TargetPath, *repo.FullName)
+		gitPath := path.Join(repoPath, ".git")
 
-		exists, err := repoExists(repoPath)
+		exists, err := repoExists(gitPath)
 		if err != nil {
 			return err
 		}
@@ -88,5 +90,8 @@ func CloneRepo(repo *github.Repository, repoPath string, config Config) error {
 		URL:  *repo.CloneURL,
 		Auth: &http.BasicAuth{Username: user, Password: config.AuthToken},
 	})
+	if err == transport.ErrEmptyRemoteRepository {
+		err = nil
+	}
 	return err
 }
