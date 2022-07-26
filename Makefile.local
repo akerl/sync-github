@@ -1,0 +1,3 @@
+PACKAGE = syncgithub
+NAMESPACE = github.com/akerl
+VERSION_VAR_PATH = version.Version
