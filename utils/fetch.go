@@ -94,7 +94,7 @@ func CloneRepo(repo *github.Repository, repoPath string, config Config) error {
 		return err
 	}
 
-	_, err = git.PlainClone(repoPath, false, &git.CloneOptions{
+	_, err = git.PlainClone(repoPath, true, &git.CloneOptions{
 		URL:  *repo.CloneURL,
 		Auth: &http.BasicAuth{Username: user, Password: config.AuthToken},
 	})
