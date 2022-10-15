@@ -1,2 +1,4 @@
 PACKAGE = syncgithub
 VERSION_VAR_PATH = version.Version
+
+export CGO_ENABLED=0
