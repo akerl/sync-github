@@ -16,7 +16,7 @@ func HandleRepos(config Config, repos []*github.Repository) error {
 	for _, repo := range repos {
 		fmt.Println(*repo.FullName)
 		repoPath := path.Join(config.TargetPath, *repo.FullName)
-		gitPath := path.Join(repoPath, ".git")
+		gitPath := path.Join(repoPath, "objects")
 
 		exists, err := repoExists(gitPath)
 		if err != nil {
