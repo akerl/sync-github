@@ -63,6 +63,14 @@ func UpdateRepo(repoPath string, config Config) error {
 		return err
 	}
 
+	err = w.Reset(&git.ResetOptions{
+		Mode: git.HardReset,
+	})
+
+	if err != nil {
+		return err
+	}
+
 	err = w.Pull(&git.PullOptions{
 		RemoteName: "origin",
 		Force:      true,
