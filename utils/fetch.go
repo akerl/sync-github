@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/go-git/go-git/v5"
+	gitconfig "github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/google/go-github/v45/github"
@@ -53,28 +54,20 @@ func UpdateRepo(repoPath string, config Config) error {
 		return err
 	}
 
-	w, err := r.Worktree()
-	if err != nil {
-		return err
-	}
-
 	user, err := config.GetUser()
 	if err != nil {
 		return err
 	}
 
-	err = w.Reset(&git.ResetOptions{
-		Mode: git.HardReset,
-	})
-
+	remote, err := r.Remote("origin")
 	if err != nil {
 		return err
 	}
 
-	err = w.Pull(&git.PullOptions{
-		RemoteName: "origin",
-		Force:      true,
-		Auth:       &http.BasicAuth{Username: user, Password: config.AuthToken},
+	err = remote.Fetch(&git.FetchOptions{
+		RefSpecs: []gitconfig.RefSpec{"refs/*:refs/*", "HEAD:refs/heads/HEAD"},
+		Force:    true,
+		Auth:     &http.BasicAuth{Username: user, Password: config.AuthToken},
 	})
 	if err == git.NoErrAlreadyUpToDate {
 		err = nil
